@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class SpringBootPlaygroundApplication
 
 fun main(args: Array<String>) {
-	runApplication<SpringBootPlaygroundApplication>(*args)
+    runApplication<SpringBootPlaygroundApplication>(*args)
 }
