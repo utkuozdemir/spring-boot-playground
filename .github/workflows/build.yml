@@ -38,5 +38,7 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-      - name: Run tests
-        run: ./mvnw -q clean package
+      - name: mvn clean
+        run: ./mvnw -Dstyle.color=always clean
+      - name: mvn package
+        run: ./mvnw -Dstyle.color=always -Dspring.output.ansi.enabled=ALWAYS package
