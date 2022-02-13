@@ -14,7 +14,7 @@ import java.util.*
 
 private val logger = KotlinLogging.logger {}
 
-private const val NAMESPACE = "ccp-mgmt-ingress"
+private const val NAMESPACE = "default"
 
 @RestController
 class LogController {
@@ -31,6 +31,7 @@ class LogController {
                 .list()
                 .items[0]
 
+        // TODO: won't work, because the source is blocking
         val logWatch = kubernetesClient
                 .pods()
                 .inNamespace(NAMESPACE)
@@ -46,6 +47,7 @@ class LogController {
                 .doOnNext { logger.info { it } }
                 .doFinally { signalType ->
                     logger.info { "Signal type: $signalType" }
+                    // TODO: This is blocking
                     br.close()
                     logWatch.close()
                     logger.info { "Closed LogWatch and the reader" }
