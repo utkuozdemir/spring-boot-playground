@@ -1,0 +1,42 @@
+---
+name: Build
+on:
+  push:
+    branches:
+      - master
+      - renovate/**
+    paths-ignore:
+      - "**.md"
+      - "LICENSE"
+      - "renovate.json"
+  pull_request:
+    branches:
+      - master
+    paths-ignore:
+      - "**.md"
+      - "LICENSE"
+      - "renovate.json"
+
+concurrency:
+  group: build-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.4.0
+      - name: Setup JDK
+        uses: actions/setup-java@v2.4.0
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: actions/cache@v2.1.7
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Run tests
+        run: ./mvnw clean package
